@@ -57,11 +57,4 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: adservice
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: authservice
   namespace: default
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::156299069385:role/authservice-secret-role
