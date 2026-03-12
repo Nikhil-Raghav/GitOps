@@ -1,0 +1,49 @@
+# -------------------------------------------------------
+# GatewayClass for MicroK8s using Envoy Gateway
+#
+# Prerequisites (run once on the cluster):
+#   kubectl apply -f https://github.com/envoyproxy/gateway/releases/latest/download/install.yaml
+#
+# Verify Envoy Gateway is running:
+#   kubectl get pods -n envoy-gateway-system
+# -------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: online-boutique-gw-class
+  annotations:
+    # Human-readable description surfaced in kubectl get gatewayclass
+    gateway.networking.k8s.io/bundle-version: "v1.0"
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  description: "Envoy Gateway — online-boutique (MicroK8s)"
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: online-boutique-proxy-config
+    namespace: default
+
+---
+# -------------------------------------------------------
+# EnvoyProxy — Envoy Gateway custom tuning
+# Adjust resources to fit a single-node MicroK8s cluster.
+# -------------------------------------------------------
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: online-boutique-proxy-config
+  namespace: default
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+        container:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

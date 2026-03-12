@@ -1,0 +1,58 @@
+# -------------------------------------------------------
+# GatewayClass for AWS EKS using Envoy Gateway
+#
+# Prerequisites (run once on the cluster):
+#   helm install eg oci://docker.io/envoyproxy/gateway-helm \
+#     --version v1.0.0 -n envoy-gateway-system --create-namespace
+#
+# Alternative: AWS Gateway API Controller (VPC Lattice)
+#   controllerName: lattice.k8s.aws/gateway-api-controller
+# -------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: online-boutique-gw-class
+  annotations:
+    gateway.networking.k8s.io/bundle-version: "v1.0"
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  description: "Envoy Gateway — online-boutique (EKS)"
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: online-boutique-proxy-config
+    namespace: default
+
+---
+# -------------------------------------------------------
+# EnvoyProxy — EKS-specific tuning
+# Uses NLB (Network Load Balancer) for internet-facing access.
+# -------------------------------------------------------
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: online-boutique-proxy-config
+  namespace: default
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 2
+        container:
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+      envoyService:
+        annotations:
+          # AWS Network Load Balancer — internet-facing
+          service.beta.kubernetes.io/aws-load-balancer-type: "external"
+          service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+          service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+          # Uncomment to attach an ACM certificate for HTTPS:
+          # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:REGION:ACCOUNT_ID:certificate/CERT_ID"
+          # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"

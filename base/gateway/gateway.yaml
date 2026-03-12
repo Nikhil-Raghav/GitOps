@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: online-boutique-gateway
+  namespace: default
+  annotations:
+    # Overlay-specific annotations (e.g., AWS NLB, cert-manager) are added via patches
+spec:
+  # GatewayClass name — must be defined per overlay (microk8s / eks)
+  gatewayClassName: online-boutique-gw-class
+
+  listeners:
+    # -------------------------------------------------------
+    # HTTP listener — redirects to HTTPS in production overlays
+    # -------------------------------------------------------
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    # -------------------------------------------------------
+    # HTTPS listener — TLS terminated at the gateway
+    # Cert secret (online-boutique-tls) provisioned per overlay:
+    #   microk8s: cert-manager Certificate resource
+    #   eks:      AWS ACM via annotation on the Gateway
+    # -------------------------------------------------------
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: online-boutique-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Same

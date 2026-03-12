@@ -20,10 +20,17 @@ spec:
           ports:
             - containerPort: 5432
           env:
+            # All values synced from AWS Secrets Manager via ExternalSecret (postgres/external-secret.yaml)
             - name: POSTGRES_DB
-              value: "authdb"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dbname
             - name: POSTGRES_USER
-              value: "authuser"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

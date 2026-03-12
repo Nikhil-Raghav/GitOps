@@ -8,6 +8,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - gatewayclass.yaml
 
 # namespace: itkannadigaru          # Uncomment: target namespace on EKS
 
@@ -48,6 +49,21 @@ images:
 # -------------------------------------------------------
 
 patches: []
+  # -------------------------------------------------------
+  # IRSA annotation for external-secrets-sa ServiceAccount
+  # Replace ROLE_ARN with the value from Terraform output:
+  #   cd InfraStructure/3-irsa && terraform output external_secrets_role_arn
+  # The eks-irsa-setup.sh script patches this automatically.
+  # -------------------------------------------------------
+  # - patch: |-
+  #     apiVersion: v1
+  #     kind: ServiceAccount
+  #     metadata:
+  #       name: external-secrets-sa
+  #       namespace: default
+  #       annotations:
+  #         eks.amazonaws.com/role-arn: ROLE_ARN
+
   # Scale up replicas for production on EKS
   # - patch: |-
   #     apiVersion: apps/v1
@@ -82,17 +98,11 @@ patches: []
   #       replicas: 2
 
   # -------------------------------------------------------
-  # EKS LoadBalancer annotation patch for frontend-external
-  # Adds AWS NLB annotation to the LoadBalancer service
+  # NOTE: frontend-external LoadBalancer has been removed.
+  # External access is now managed by Gateway API.
+  # NLB annotations are configured in gatewayclass.yaml
+  # via the EnvoyProxy.spec.provider.kubernetes.envoyService.annotations.
   # -------------------------------------------------------
-  # - patch: |-
-  #     apiVersion: v1
-  #     kind: Service
-  #     metadata:
-  #       name: frontend-external
-  #       annotations:
-  #         service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-  #         service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 
   # -------------------------------------------------------
   # EKS IAM Role for Service Account (IRSA)

@@ -1,0 +1,63 @@
+# -------------------------------------------------------
+# HTTPRoute: HTTP → HTTPS redirect
+# All plain HTTP traffic on port 80 is permanently
+# redirected to HTTPS (301).
+# -------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-to-https-redirect
+  namespace: default
+spec:
+  parentRefs:
+    - name: online-boutique-gateway
+      sectionName: http
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+
+---
+# -------------------------------------------------------
+# HTTPRoute: Frontend — serves all user-facing traffic
+# Matches every path under "/" on the HTTPS listener.
+# The frontend pod internally proxies to all backend
+# microservices via ClusterIP (no direct external exposure
+# needed for gRPC-only services).
+# -------------------------------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: frontend-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: online-boutique-gateway
+      sectionName: https
+  # Optional: set hostnames when a real domain is available
+  # hostnames:
+  #   - "shop.example.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      # Production-grade timeouts — tune per SLO requirements
+      timeouts:
+        request: 30s
+        backendRequest: 25s
+      filters:
+        # Strip any X-Forwarded-* headers from untrusted sources
+        # before the gateway re-sets them
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            remove:
+              - X-Forwarded-For
+            set:
+              - name: X-Gateway-Source
+                value: online-boutique-gateway
+      backendRefs:
+        - name: frontend
+          port: 80

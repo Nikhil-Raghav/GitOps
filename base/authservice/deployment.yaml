@@ -44,6 +44,32 @@ spec:
           env:
             - name: PORT
               value: "8081"
+            # DB connection — values synced from AWS Secrets Manager via ExternalSecret
+            - name: DB_HOST
+              value: "postgres"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: db-name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: db-password
+            # JWT signing key
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: authservice-secret
+                  key: jwt-secret
           resources:
             requests:
               cpu: 50m

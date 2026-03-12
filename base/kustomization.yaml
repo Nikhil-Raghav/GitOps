@@ -6,6 +6,7 @@ resources:
   - adservice/service.yaml
   - authservice/deployment.yaml
   - authservice/service.yaml
+  - authservice/external-secret.yaml
   - cartservice/deployment.yaml
   - cartservice/service.yaml
   - checkoutservice/deployment.yaml
@@ -19,6 +20,9 @@ resources:
   - loadgenerator/deployment.yaml
   - paymentservice/deployment.yaml
   - paymentservice/service.yaml
+  - postgres/deployment.yaml
+  - postgres/service.yaml
+  - postgres/external-secret.yaml
   - productcatalogservice/deployment.yaml
   - productcatalogservice/service.yaml
   - recommendationservice/deployment.yaml
@@ -27,3 +31,9 @@ resources:
   - shippingservice/service.yaml
   - shoppingassistantservice/deployment.yaml
   - shoppingassistantservice/service.yaml
+  # External Secrets Operator — ServiceAccount + SecretStore
+  - external-secrets/serviceaccount.yaml
+  - external-secrets/secretstore.yaml
+  # Kubernetes Gateway API — replaces frontend-external LoadBalancer
+  - gateway/gateway.yaml
+  - gateway/httproute.yaml
