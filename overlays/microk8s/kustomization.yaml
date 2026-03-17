@@ -17,29 +17,29 @@ labels:
 
 # Image overrides — update tag here when a new image is pushed
 images:
-  - name: manojkrishnappa/adservice
+  - name: nikhilraghav08/adservice
     newTag: "1"
-  - name: manojkrishnappa/cartservice
+  - name: nikhilraghav08/cartservice
     newTag: "1"
-  - name: manojkrishnappa/checkoutservice
+  - name: nikhilraghav08/checkoutservice
     newTag: "1"
-  - name: manojkrishnappa/currencyservice
+  - name: nikhilraghav08/currencyservice
     newTag: "1"
-  - name: manojkrishnappa/emailservice
+  - name: nikhilraghav08/emailservice
     newTag: "1"
-  - name: manojkrishnappa/frontend
+  - name: nikhilraghav08/frontend
     newTag: "1"
-  - name: manojkrishnappa/loadgenerator
+  - name: nikhilraghav08/loadgenerator
     newTag: "1"
-  - name: manojkrishnappa/paymentservice
+  - name: nikhilraghav08/paymentservice
     newTag: "1"
-  - name: manojkrishnappa/productcatalogservice
+  - name: nikhilraghav08/productcatalogservice
     newTag: "1"
-  - name: manojkrishnappa/recommendationservice
+  - name: nikhilraghav08/recommendationservice
     newTag: "1"
-  - name: manojkrishnappa/shippingservice
+  - name: nikhilraghav08/shippingservice
     newTag: "1"
-  - name: manojkrishnappa/shoppingassistantservice
+  - name: nikhilraghav08/shoppingassistantservice
     newTag: "1"
 
 # Replica count suitable for a single-node MicroK8s cluster

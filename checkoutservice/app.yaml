@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ITkannadigaru/GitOps.git
+    repoURL: https://github.com/Nikhil-Raghav/GitOps.git
     targetRevision: main
     path: base/checkoutservice
   destination:
