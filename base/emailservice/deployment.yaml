@@ -29,7 +29,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: nikhilraghav08/emailservice:5199cf4352fb786069b1942abadb6c3583120355
+        image: nikhilraghav08/emailservice:35f5849399eaf1b924b41e10a9203cedbed819e9
         ports:
         - containerPort: 8080
         env:
