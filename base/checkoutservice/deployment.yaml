@@ -28,7 +28,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: manojkrishnappa/checkoutservice:33ed0d8eac164739697389ec59fec51b463a4f32
+          image: nikhilraghav08/checkoutservice:2dc62c317cb612463277dbecd195b73cf28b6aeb
           ports:
           - containerPort: 5050
           readinessProbe:
