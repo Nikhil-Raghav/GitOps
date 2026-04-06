@@ -22,7 +22,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: server
-        image: nikhilraghav08/authservice:3
+        image: nikhilraghav08/authservice:8da8afb1d43598c409e57313b5b48b98d2782061
         ports:
         - containerPort: 8081
         securityContext:
