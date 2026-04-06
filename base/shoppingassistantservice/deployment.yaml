@@ -32,7 +32,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: false
-        image: nikhilraghav08/shoppingassistantservice:1
+        image: nikhilraghav08/shoppingassistantservice:3facd2fdf07776a97ea3ad6542fe979496d8572d
         ports:
         - name: http
           containerPort: 8080
